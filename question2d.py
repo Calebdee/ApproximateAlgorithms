@@ -3,8 +3,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 from common import *
 
-train = np.genfromtxt("data/bank-note/train.csv", delimiter= ",")
-test  = np.genfromtxt("data/bank-note/test.csv", delimiter= ",")
+train = pd.read_csv("data/bank-note/train.csv").to_numpy()
+test  = pd.read_csv("data/bank-note/test.csv").to_numpy()
+
 train_label = train[:,-1]
 test_label  = test [:,-1]
 train_data  = np.hstack((train[:,0:-1], np.ones((train.shape[0],1))))
@@ -38,7 +39,7 @@ SN = np.zeros((dim, dim))
 
 update_means_inplace = True
 if update_means_inplace:
-    print("Updating the means inplace")
+    print("Updating mean-field fixed. Please wait...")
 else:
     print("Not updating the means inplace")
 
@@ -49,8 +50,6 @@ for i in range(100):
     phi_phi_transpose = np.multiply(lambdaa[:, np.newaxis, np.newaxis], phi_phi_transpose) # N x 5 x 5
     mean_term_1_all   = np.sum(np.multiply( (train_label[:, np.newaxis]-0.5), train_data), axis= 0) # 5
     
-    # Do the Expectation step in multiple steps
-    # Update one variable at a time.
     for j in range(dim):
         mean_term_1 = mean_term_1_all[j]
         all_except_one_index = np.delete(np.arange(dim), j)
@@ -67,7 +66,6 @@ for i in range(100):
     if not update_means_inplace:
         mN = mN_new
 
-    # Do the maximisation step
     temp = SN + np.matmul(mN[:, np.newaxis], mN[np.newaxis, :])
     xi = np.matmul( np.matmul( train_data[:, np.newaxis, :],  temp[np.newaxis, :, :]), train_data[:, :, np.newaxis]).flatten()
     xi = np.sqrt(xi)

@@ -1,6 +1,7 @@
 from gmq_example import gass_hermite_quad
 import numpy as np
 import matplotlib.pyplot as plt
+
 def inner(x=[], m=10, b=3):
 	x = np.array([x])
 	x = m*x + b
@@ -35,7 +36,7 @@ b=3
 #d1_lp = (-2 - inner(theta_0)) * m
 #d2_lp = -(d1_lp * (1 - inner(theta_0))) * m
 d2_lp = -(-2 - inner(theta_0) * (1- inner(theta_0)) * m * m)
-print("Mode: {:.2f}".format(theta_0))
+print("Mean: {:.2f}".format(theta_0))
 print("Variance: {:.2f}".format(d2_lp[0]))
 laplace_z =  pz[0][pz.argmax()] * np.exp(- 0.5 * np.power(z-theta_0, 2) * d2_lp[0])
 plt.plot(z, laplace_z, label= 'Laplace')
@@ -44,16 +45,13 @@ plt.legend(loc= 'upper right')
 lva = np.zeros((z.shape))
 # Initial value of xi
 xi  = 0
-for i in range(10000):
-    # Expectation step
+while(True):
     first = np.exp(-np.multiply(z, z)) * inner(xi)
     second= np.exp(5*(z-xi) + -1/(2*inner(xi, m, b)) * (inner(xi,m ,b) - 0.5) *np.multiply(10*(z-xi), 10*(z + xi) + 6))  
     lva = np.multiply(first, second)/norm
 
-    # Maximise step
     xi_new  = z[lva.argmax()]
     diff    = np.abs(xi_new - xi)
-    print("Iter {}, xi= {:.4f}, Diff= {:.4f}".format(i, xi_new, diff))
     if diff < 1e-4:
         break
     else:
