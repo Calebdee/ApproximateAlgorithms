@@ -64,8 +64,6 @@ for i in range(100):
     	pred_like[i] = likelihood_1**test_label[i] * (1-likelihood_1)**(1-test_label[i])
     pred_likelihood_new = np.mean(pred_like)
     print("Prediction Likelihood Average: {:.2f}".format(pred_likelihood))
-    print("Epoch {:02d} Test_data Pred_acc= {:.2f}, Pred_likelihood= {:.2f}".format(i, acc, pred_likelihood_new))
-
 
     if np.abs(pred_likelihood_new - pred_likelihood) < 1e-3:
         break
@@ -74,5 +72,5 @@ for i in range(100):
 
 print("\nMean = ")
 print(mN)
-print("Hessian = ")
+print("S = ")
 print(SN)

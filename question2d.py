@@ -88,7 +88,6 @@ for i in range(100):
     	likelihood_1 = gass_hermite_quad(inner, degree= 100, m= m, b= b)/np.sqrt(np.pi)
     	pred_like[i] = likelihood_1**test_label[i] * (1-likelihood_1)**(1-test_label[i])
     pred_likelihood_new = np.mean(pred_like)
-    print("Epoch {:02d} Test_data Pred_acc= {:.2f}, Pred_likelihood= {:.2f}".format(i, acc, pred_likelihood_new))
 
     if np.abs(pred_likelihood_new - pred_likelihood) < 1e-3:
         break
@@ -97,5 +96,5 @@ for i in range(100):
 
 print("\nMean = ")
 print(mN)
-print("Hessian = ")
+print("S = ")
 print(SN)
